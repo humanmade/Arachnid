@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Arachnid
- * Description: Catch webhooks in your web.
+ * Description: Catch API requests in your web.
  * Version: 0.1
  */
 
@@ -124,7 +124,7 @@ function on_dispatch_request( $result, $request, $route, $handler ) {
 	}
 
 	// Is this a webhook request?
-	if ( empty( $handler['is_webhook'] ) ) {
+	if ( empty( $handler['arachnid_log'] ) ) {
 		return $result;
 	}
 
