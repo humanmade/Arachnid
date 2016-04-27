@@ -149,8 +149,20 @@ function on_dispatch_request( $result, $request, $route, $handler ) {
 		$data['response_status'] = $response->get_status();
 	}
 
-	$request = Request::create( $data );
-	var_dump( $request );
+	$entry = Request::create( $data );
+
+	if ( isset( $handler['arachnid_log_callback'] ) ) {
+		call_user_func( $handler['arachnid_log_callback'], $entry, $request, $result );
+	}
+
+	/**
+	 * Fires when Arachnid has logged a request.
+	 *
+	 * @param Request $entry Arachnid log entry.
+	 * @param \WP_HTTP_Request $request API request object.
+	 * @param \WP_HTTP_Response|\WP_Error $result API result value.
+	 */
+	do_action( 'arachnid.logged_request', $entry, $request, $result );
 
 	return $result;
 }
