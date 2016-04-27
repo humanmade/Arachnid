@@ -62,8 +62,8 @@ function bootstrap() {
 function update_tables() {
 	global $wpdb;
 
-	$table_name = Request::get_table();
-	$meta_table_name = Request::get_meta_table();
+	$table_name = Entry::get_table();
+	$meta_table_name = Entry::get_meta_table();
 
 	$tables = [];
 	$tables[ $table_name ] = "CREATE TABLE $table_name (
@@ -80,12 +80,12 @@ function update_tables() {
 
 	$tables[ $meta_table_name ] = "CREATE TABLE $meta_table_name (
 		`key` varchar(255) NOT NULL DEFAULT '',
-		`request` int(20) unsigned NOT NULL,
+		`entry` int(20) unsigned NOT NULL,
 		`value` longtext,
 
 		PRIMARY KEY (`key`),
-		KEY `request` (`request`),
-		FOREIGN KEY (`request`)
+		KEY `entry` (`entry`),
+		FOREIGN KEY (`entry`)
 			REFERENCES $table_name (`id`)
 			ON DELETE CASCADE
 			ON UPDATE CASCADE
@@ -149,7 +149,7 @@ function on_dispatch_request( $result, $request, $route, $handler ) {
 		$data['response_status'] = $response->get_status();
 	}
 
-	$entry = Request::create( $data );
+	$entry = Entry::create( $data );
 
 	if ( isset( $handler['arachnid_log_callback'] ) ) {
 		call_user_func( $handler['arachnid_log_callback'], $entry, $request, $result );

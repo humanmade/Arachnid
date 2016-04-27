@@ -4,12 +4,12 @@ namespace Arachnid;
 
 use WP_Error;
 
-class Request {
-	const TABLE_NAME = '%swebhook_requests';
-	const META_TABLE_NAME = '%swebhook_requests_meta';
+class Entry {
+	const TABLE_NAME = '%sarachnid_entries';
+	const META_TABLE_NAME = '%sarachnid_entries_meta';
 
 	/**
-	 * Request ID.
+	 * Entry ID.
 	 *
 	 * @var int
 	 */
@@ -103,7 +103,7 @@ class Request {
 		global $wpdb;
 
 		$query = $wpdb->prepare(
-			'SELECT value FROM ' . static::get_meta_table() . ' WHERE `key` = %s AND `request` = %d;',
+			'SELECT value FROM ' . static::get_meta_table() . ' WHERE `key` = %s AND `entry` = %d;',
 			$key,
 			$this->id
 		);
@@ -128,7 +128,7 @@ class Request {
 		$table = static::get_meta_table();
 		$query = $wpdb->prepare(
 			"INSERT INTO $table
-				SET `key` = %s, `request` = %d, `value` = %s
+				SET `key` = %s, `entry` = %d, `value` = %s
 				ON DUPLICATE KEY UPDATE
 					`value` = VALUES(`value`);",
 			$key,
@@ -137,7 +137,7 @@ class Request {
 		);
 		$result = $wpdb->query( $query );
 		if ( $result === false ) {
-			return new WP_Error( 'arachnid.request.set_meta.db_error', $wpdb->last_error, compact( $key, $value, $query ) );
+			return new WP_Error( 'arachnid.entry.set_meta.db_error', $wpdb->last_error, compact( $key, $value, $query ) );
 		}
 
 		return true;
@@ -162,11 +162,11 @@ class Request {
 	}
 
 	/**
-	 * Convert raw DB data to a Request instance.
+	 * Convert raw DB data to an Entry instance.
 	 *
 	 * Allows use as a callback, such as in `array_map`
 	 *
-	 * @param stdClass $row Raw request data from the database.
+	 * @param stdClass $row Raw entry data from the database.
 	 * @return static
 	 */
 	protected static function to_instance( $row ) {
@@ -174,9 +174,9 @@ class Request {
 	}
 
 	/**
-	 * Convert list of raw data to Request instances.
+	 * Convert list of raw data to Entry instances.
 	 *
-	 * @param stdClass[] $rows List of raw request data rows.
+	 * @param stdClass[] $rows List of raw entry data rows.
 	 * @return static[]
 	 */
 	protected static function to_instances( $rows ) {
@@ -184,7 +184,7 @@ class Request {
 	}
 
 	/**
-	 * Create a request object.
+	 * Create an Entry object.
 	 *
 	 * @param array $data {
 	 *     @var array|object|null $request_headers Headers passed with the request.
@@ -232,10 +232,10 @@ class Request {
 	}
 
 	/**
-	 * Get request by request ID.
+	 * Get entry by ID.
 	 *
-	 * @param int $id Request ID.
-	 * @return static|WP_Error|null Request instance on success, error object if error occurred, null if no request found.
+	 * @param int $id Entry ID.
+	 * @return static|WP_Error|null Entry instance on success, error object if error occurred, null if no entry found.
 	 */
 	public static function get( $id ) {
 		global $wpdb;
