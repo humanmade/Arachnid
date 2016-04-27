@@ -68,6 +68,7 @@ function update_tables() {
 	$tables = [];
 	$tables[ $table_name ] = "CREATE TABLE $table_name (
 		`id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+		`route` varchar(255) NOT NULL,
 		`timestamp` datetime NOT NULL,
 		`response_status` smallint(2) unsigned NOT NULL,
 		`request` longblob NOT NULL,
@@ -75,6 +76,7 @@ function update_tables() {
 
 		PRIMARY KEY (`id`),
 		KEY `timestamp` (`timestamp`),
+		KEY `route` (`route`),
 		KEY `response_status` (`response_status`)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
@@ -136,6 +138,7 @@ function on_dispatch_request( $result, $request, $route, $handler ) {
 	// We've found a webhook, so log it. THIS IS NOT A DRILL!
 	$data = [
 		'timestamp'       => $GLOBALS['timestart'],
+		'route'           => $route,
 		'request'         => $request,
 		'response'        => $result,
 	];

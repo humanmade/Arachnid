@@ -23,6 +23,13 @@ class Entry {
 	protected $timestamp;
 
 	/**
+	 * Route used to handle the request.
+	 *
+	 * @var string
+	 */
+	protected $route;
+
+	/**
 	 * Request data.
 	 *
 	 * @var WP_REST_Request Request data.
@@ -51,6 +58,7 @@ class Entry {
 	protected function __construct( $data ) {
 		$this->id              = $data->id;
 		$this->timestamp       = mysql2date( 'U', $data->timestamp );
+		$this->route           = $data->route;
 		$this->request         = unserialize( $data->request );
 		$this->response        = unserialize( $data->response );
 		$this->response_status = $data->response_status;
@@ -187,10 +195,9 @@ class Entry {
 	 * Create an Entry object.
 	 *
 	 * @param array $data {
-	 *     @var array|object|null $request_headers Headers passed with the request.
+	 *     @var string $route Route used to handle the request.
 	 *     @var WP_REST_Request|null $request Request data.
 	 *     @var int|null $response_status Response status code.
-	 *     @var array|object|null $response_headers Headers passed back with the response.
 	 *     @var WP_REST_Response|WP_Error|null $response Response data.
 	 * }
 	 */
@@ -198,14 +205,14 @@ class Entry {
 		global $wpdb;
 
 		$serialize_keys = [
-			'request_headers',
 			'request',
 			'response_status',
-			'response_headers',
 			'response',
 		];
 
-		$fields = [];
+		$fields = [
+			'route' => $data['route'],
+		];
 		foreach ( $serialize_keys as $key ) {
 			if ( empty( $data[ $key ] ) ) {
 				continue;
