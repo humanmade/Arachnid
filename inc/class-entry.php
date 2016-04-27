@@ -115,7 +115,7 @@ class Entry {
 			$key,
 			$this->id
 		);
-		$value = $wpdb->get_col( $query );
+		$value = $wpdb->get_var( $query );
 		if ( empty( $value ) ) {
 			return $default;
 		}
