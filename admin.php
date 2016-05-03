@@ -6,6 +6,8 @@ use Arachnid\Entry;
 use WP_REST_Request;
 use WP_REST_Response;
 
+const PAGE_SLUG = 'arachnid-log';
+
 function bootstrap() {
 	if ( ! is_admin() ) {
 		return;
@@ -29,7 +31,7 @@ function register() {
 		'manage_options',
 
 		// $menu_slug
-		'arachnid-log',
+		PAGE_SLUG,
 
 		// $function
 		__NAMESPACE__ . '\\render',
@@ -113,6 +115,8 @@ function render() {
 				<input type="text" id="endpoint-search" name="route" />
 				<button class="button">Filter by Endpoint</button>
 			</p>
+
+			<input type="hidden" name="page" value="<?php echo esc_attr( PAGE_SLUG ) ?>" />
 		</form>
 
 		<div class="tablenav bottom">
