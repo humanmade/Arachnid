@@ -1,0 +1,72 @@
+
+.arachnid-entry {
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	padding: 5px 10px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+.arachnid-entry pre {
+	background: #f1f1f1;
+	padding: 0.7em;
+	max-height: 40em;
+	overflow: scroll;
+}
+.arachnid-entry header {
+	display: flex;
+	align-items: center;
+}
+.arachnid-entry .status-icon {
+	margin-right: 5px;
+	margin-left: -5px;
+}
+.arachnid-entry .status-success {
+	color: #46B450;
+}
+.arachnid-entry .status-redirect {
+	color: #00a0d2;
+}
+.arachnid-entry .status-error {
+	color: #dc3232;
+}
+.arachnid-entry header .time {
+	font-size: 0.8em;
+	color: #a0a5aa;
+}
+.arachnid-entry .title {
+	flex-grow: 1;
+}
+.arachnid-entry h2 {
+	margin-top: 0;
+}
+.arachnid-entry .the-mighty-expando {
+	cursor: hand;
+	cursor: pointer;
+	margin-left: 1em;
+}
+.arachnid-entry .the-mighty-expando i {
+	font-size: 24px;
+	width: 24px;
+	height: 24px;
+}
+.arachnid-entry .nav-tab {
+	cursor: hand;
+	cursor: pointer;
+	background: #f1f1f1;
+}
+.arachnid-entry .nav-tab:hover {
+	background: #f9f9f9;
+}
+.arachnid-entry .nav-tab-active {
+	background: #fff;
+	border-bottom-color: #fff;
+}
+.arachnid-entry table.diff td {
+	font-size: 10px;
+	padding: 0.1em;
+}
+.arachnid-entry .section {
+	display: none;
+}
+.arachnid-entry .section.active {
+	display: block;
+}

@@ -10,6 +10,9 @@ namespace Arachnid;
 const VERSION = '0.1';
 
 spl_autoload_register( __NAMESPACE__ . '\\autoload' );
+
+require __DIR__ . '/admin.php';
+
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\bootstrap' );
 
 /**
@@ -50,6 +53,8 @@ function bootstrap() {
 		update_tables();
 		// update_option( 'arachnid_version', VERSION );
 	}
+
+	Admin\bootstrap();
 
 	add_action( 'rest_dispatch_request', __NAMESPACE__ . '\\on_dispatch_request', 10, 4 );
 }
