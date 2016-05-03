@@ -340,7 +340,7 @@ class Entry {
 
 		$table = static::get_table();
 		$where = implode( ' AND ', $conditions );
-		$query = "SELECT * FROM $table";
+		$query = "SELECT SQL_CALC_FOUND_ROWS * FROM $table";
 		if ( ! empty( $conditions ) ) {
 			$query .= ' WHERE ' . $where;
 		}
@@ -358,6 +358,12 @@ class Entry {
 			return new WP_Error( 'arachnid.query.db_error', $wpdb->last_error, compact( 'query' ) );
 		}
 
-		return static::to_instances( $results );
+		$total = $wpdb->get_var( "SELECT FOUND_ROWS();" );
+
+		// Convert results to result object.
+		$result = new QueryResult( static::to_instances( $results ) );
+		$result->total = $total;
+		$result->query = $query;
+		return $result;
 	}
 }
