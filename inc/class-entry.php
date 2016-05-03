@@ -215,7 +215,6 @@ class Entry {
 
 		$serialize_keys = [
 			'request',
-			'response_status',
 			'response',
 		];
 
@@ -228,6 +227,10 @@ class Entry {
 			}
 
 			$fields[ $key ] = serialize( $data[ $key ] );
+		}
+
+		if ( isset( $data['response_status'] ) ) {
+			$fields['response_status'] = absint( $data['response_status'] );
 		}
 
 		// Set the timestamp, or default to now.
