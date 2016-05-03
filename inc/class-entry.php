@@ -290,6 +290,7 @@ class Entry {
 
 		$offset = 0;
 		$limit = 10;
+		$order_dir = 'ASC';
 
 		$conditions = [];
 		$params = [];
@@ -335,6 +336,21 @@ class Entry {
 				case 'limit':
 					$limit = ( $value === false ) ? false : absint( $value );
 					break;
+
+				case 'order_dir':
+					switch ( strtolower( $value ) ) {
+						case 'asc':
+							$order_dir = 'ASC';
+							break;
+
+						case 'desc':
+							$order_dir = 'DESC';
+							break;
+
+						default:
+							return new WP_Error( 'arachnid.query.invalid_order' );
+					}
+					break;
 			}
 		}
 
@@ -344,6 +360,7 @@ class Entry {
 		if ( ! empty( $conditions ) ) {
 			$query .= ' WHERE ' . $where;
 		}
+		$query .= " ORDER BY `timestamp` $order_dir";
 		if ( $limit !== false ) {
 			$query = sprintf( '%s LIMIT %d OFFSET %d', $query, absint( $limit ), absint( $offset ) );
 		}

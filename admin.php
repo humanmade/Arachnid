@@ -82,7 +82,9 @@ function on_load() {
  */
 function render() {
 	$args = wp_unslash( $_GET );
-	$query = [];
+	$query = [
+		'order_dir' => 'desc',
+	];
 	if ( isset( $args['success'] ) ) {
 		$query['success'] = bool_from_yn( $args['success'] );
 	}
