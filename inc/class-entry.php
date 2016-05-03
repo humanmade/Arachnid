@@ -366,7 +366,7 @@ class Entry {
 		}
 
 		// Prepare if we have fields.
-		if ( ! empty( $fields ) ) {
+		if ( ! empty( $params ) ) {
 			$query = $wpdb->prepare( $query, $params );
 		}
 
