@@ -112,7 +112,9 @@ function render() {
 		<form method="GET" action="">
 			<p class="search-box">
 				<label for="endpoint-search" class="screen-reader-text">Show Endpoint:</label>
-				<input type="text" id="endpoint-search" name="route" />
+				<input type="text" id="endpoint-search" name="route"
+					value="<?php echo isset( $args['route'] ) ? esc_attr( $args['route'] ) : '' ?>"
+					/>
 				<button class="button">Filter by Endpoint</button>
 			</p>
 
