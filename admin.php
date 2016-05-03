@@ -138,6 +138,12 @@ function render() {
 
 			<?php endforeach ?>
 
+			<?php if ( empty( $logs->total ) ): ?>
+
+				<li class="notice notice-error notice-large"><p>No logs found!</p></li>
+
+			<?php endif ?>
+
 		</ul>
 
 	</div>
