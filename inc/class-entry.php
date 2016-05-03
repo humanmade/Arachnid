@@ -269,4 +269,95 @@ class Entry {
 
 		return static::to_instance( $data );
 	}
+
+	/**
+	 * Query for entries.
+	 *
+	 * @param array $args Query arguments. {
+	 *     @type string $route Route to search for.
+	 *     @type int $response_status Response status code.
+	 *     @type int $timestamp Exact timestamp to search for.
+	 *     @type int $before Upper bound for the timestamp.
+	 *     @type int $after Lower bound for the timestamp.
+	 *     @type int $offset Row offset to start from.
+	 *     @type int|bool $limit Limit of rows to return, or false for no limit.
+	 * }
+	 *
+	 * @return Entry[]|WP_Error List of entries if successful, error otherwise.
+	 */
+	public static function query( $args = [] ) {
+		global $wpdb;
+
+		$offset = 0;
+		$limit = 10;
+
+		$conditions = [];
+		$params = [];
+		foreach ( $args as $key => $value ) {
+			switch ( $key ) {
+				case 'route':
+					$conditions[] = '`route` = %s';
+					$params[] = $value;
+					break;
+
+				case 'response_status':
+					$conditions[] = '`response_status` = %d';
+					$params[] = $value;
+					break;
+
+				case 'success':
+					if ( $value ) {
+						$conditions[] = '(`response_status` >= 200 AND `response_status` < 300)';
+					} else {
+						$conditions[] = '(`response_status` < 200 OR `response_status` >= 300)';
+					}
+					break;
+
+				case 'timestamp':
+					$conditions[] = '`timestamp` = %s';
+					$params[] = date( 'Y-m-d H:i:s', $value );
+					break;
+
+				case 'before':
+					$conditions[] = '`timestamp` < %s';
+					$params[] = date( 'Y-m-d H:i:s', $value );
+					break;
+
+				case 'after':
+					$conditions[] = '`timestamp` < %s';
+					$params[] = date( 'Y-m-d H:i:s', $value );
+					break;
+
+				case 'offset':
+					$offset = absint( $value );
+					break;
+
+				case 'limit':
+					$limit = ( $value === false ) ? false : absint( $value );
+					break;
+			}
+		}
+
+		$table = static::get_table();
+		$where = implode( ' AND ', $conditions );
+		$query = "SELECT * FROM $table";
+		if ( ! empty( $conditions ) ) {
+			$query .= ' WHERE ' . $where;
+		}
+		if ( $limit !== false ) {
+			$query = sprintf( '%s LIMIT %d OFFSET %d', $query, absint( $limit ), absint( $offset ) );
+		}
+
+		// Prepare if we have fields.
+		if ( ! empty( $fields ) ) {
+			$query = $wpdb->prepare( $query, $params );
+		}
+
+		$results = $wpdb->get_results( $query );
+		if ( $results === null ) {
+			return new WP_Error( 'arachnid.query.db_error', $wpdb->last_error, compact( 'query' ) );
+		}
+
+		return static::to_instances( $results );
+	}
 }
