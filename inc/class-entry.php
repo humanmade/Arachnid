@@ -379,7 +379,7 @@ class Entry {
 
 		// Convert results to result object.
 		$result = new QueryResult( static::to_instances( $results ) );
-		$result->total = $total;
+		$result->total = absint( $total );
 		$result->query = $query;
 		return $result;
 	}
