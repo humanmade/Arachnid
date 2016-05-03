@@ -146,7 +146,7 @@ function on_dispatch_request( $result, $request, $route, $handler ) {
 	// Grab the status, depending on what result we have.
 	if ( is_wp_error( $result ) ) {
 		$err_data = $result->get_error_data();
-		$data['response_status'] = isset( $err_data['status'] ) ? absint( $err_data ) : 500;
+		$data['response_status'] = isset( $err_data['status'] ) ? absint( $err_data['status'] ) : 500;
 	} else {
 		$response = rest_ensure_response( $result );
 		$data['response_status'] = $response->get_status();
