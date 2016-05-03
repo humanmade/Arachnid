@@ -90,7 +90,7 @@ function render() {
 	if ( isset( $args['success'] ) ) {
 		$query['success'] = bool_from_yn( $args['success'] );
 	}
-	if ( isset( $args['route'] ) ) {
+	if ( ! empty( $args['route'] ) ) {
 		$query['route'] = $args['route'];
 	}
 	$logs = Entry::query( $query );
