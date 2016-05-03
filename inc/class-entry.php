@@ -83,6 +83,15 @@ class Entry {
 	}
 
 	/**
+	 * Get the route for the request.
+	 *
+	 * @return string Route string
+	 */
+	public function get_route() {
+		return $this->route;
+	}
+
+	/**
 	 * Get request object.
 	 *
 	 * @return WP_REST_Request
