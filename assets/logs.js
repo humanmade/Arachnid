@@ -21,4 +21,26 @@ jQuery( document ).ready( function ( $ ) {
 		$others.removeClass( 'active' );
 		$section.addClass( 'active' );
 	});
+
+	var clipboard = new Clipboard( '.arachnid-copy' );
+	var showMessage = function ( parent, text ) {
+		var msg = document.createElement( 'span' );
+		msg.className = 'message';
+		msg.textContent = text;
+		$(parent).prepend( msg );
+
+		setTimeout( function () {
+			$(msg).fadeOut( function () {
+				$(msg).remove();
+			});
+		}, 600 );
+	};
+	clipboard.on( 'success', function ( e ) {
+		showMessage( e.trigger, 'Copied!' );
+		e.clearSelection();
+	});
+
+	clipboard.on( 'error', function ( e ) {
+		showMessage( e.trigger, 'Press Ctrl+C to copy' );
+	});
 });

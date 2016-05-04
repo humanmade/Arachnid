@@ -70,3 +70,23 @@
 .arachnid-entry .section.active {
 	display: block;
 }
+
+.arachnid-entry .button.arachnid-copy {
+	float: right;
+	/* Pull back across, larger value than necessary. */
+	margin-left: -400px;
+
+	margin-right: 1em;
+	margin-top: 1em;
+
+	position: relative;
+}
+.arachnid-entry .arachnid-copy .message {
+	display: block;
+	position: absolute;
+	right: 130%;
+}
+.arachnid-entry .arachnid-copy .dashicons {
+	/* Match button line height. */
+	line-height: 28px;
+}

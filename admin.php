@@ -76,7 +76,8 @@ function error_to_response( $error ) {
  */
 function on_load() {
 	wp_enqueue_style( 'arachnid-log', plugins_url( 'assets/logs.css', __FILE__ ) );
-	wp_enqueue_script( 'arachnid-log', plugins_url( 'assets/logs.js', __FILE__ ), [ 'jquery' ] );
+	wp_enqueue_script( 'arachnid-clipboard.js', 'https://cdn.jsdelivr.net/clipboard.js/1.5.10/clipboard.min.js', [], '1.5.10' );
+	wp_enqueue_script( 'arachnid-log', plugins_url( 'assets/logs.js', __FILE__ ), [ 'jquery', 'arachnid-clipboard.js' ] );
 }
 
 /**
@@ -344,6 +345,9 @@ function render_headers( $headers ) {
 }
 
 function render_request( WP_REST_Request $request ) {
+	static $id = 0;
+	$id++;
+
 	$body = $request->get_body();
 
 	// Pretty-print the JSON if we can.
@@ -352,25 +356,47 @@ function render_request( WP_REST_Request $request ) {
 		$body = wp_json_encode( $decoded, JSON_PRETTY_PRINT );
 	}
 
+	$headers_id = sprintf( 'arachnid-request-headers-%d', $id );
+	$body_id = sprintf( 'arachnid-request-body-%d', $id );
+
 	?>
 
 	<h3>Headers</h3>
-	<pre><?php render_headers( $request->get_headers() ) ?></pre>
+	<button class="button arachnid-copy" data-clipboard-target="#<?php echo esc_attr( $headers_id ) ?>">
+		<i class="dashicons dashicons-clipboard"></i>
+	</button>
+	<pre id="<?php echo esc_attr( $headers_id ) ?>"><?php render_headers( $request->get_headers() ) ?></pre>
 
 	<h3>Body</h3>
-	<pre><?php echo esc_html( $body ) ?></pre>
+	<button class="button arachnid-copy" data-clipboard-target="#<?php echo esc_attr( $body_id ) ?>">
+		<i class="dashicons dashicons-clipboard"></i>
+	</button>
+	<pre id="<?php echo esc_attr( $body_id ) ?>"><?php echo esc_html( $body ) ?></pre>
 
 	<?php
 }
 
 function render_response( WP_REST_Response $response ) {
+	static $id = 0;
+	$id++;
+
+	$headers_id = sprintf( 'arachnid-response-headers-%d', $id );
+	$body_id = sprintf( 'arachnid-response-body-%d', $id );
+
 	?>
 	<h3>Headers</h3>
-	<pre><?php
+	<button class="button arachnid-copy" data-clipboard-target="#<?php echo esc_attr( $headers_id ) ?>">
+		<i class="dashicons dashicons-clipboard"></i>
+	</button>
+	<pre id="<?php echo esc_attr( $headers_id ) ?>"><?php
 		printf( 'HTTP/1.0 %d %s', $response->get_status(), get_status_header_desc( $response->get_status() ) );
 		render_headers( $response->get_headers() );
 	?></pre>
+
 	<h3>Body</h3>
-	<pre><?php echo esc_html( wp_json_encode( $response->get_data(), JSON_PRETTY_PRINT ) ) ?></pre>
+	<button class="button arachnid-copy" data-clipboard-target="#<?php echo esc_attr( $body_id ) ?>">
+		<i class="dashicons dashicons-clipboard"></i>
+	</button>
+	<pre id="<?php echo esc_attr( $body_id ) ?>"><?php echo esc_html( wp_json_encode( $response->get_data(), JSON_PRETTY_PRINT ) ) ?></pre>
 	<?php
 }
