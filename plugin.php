@@ -86,11 +86,13 @@ function update_tables() {
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 	$tables[ $meta_table_name ] = "CREATE TABLE $meta_table_name (
+		`id` int(20) unsigned NOT NULL AUTO_INCREMENT,
 		`key` varchar(255) NOT NULL DEFAULT '',
 		`entry` int(20) unsigned NOT NULL,
 		`value` longtext,
 
-		PRIMARY KEY (`key`),
+		PRIMARY KEY (`id`),
+		KEY `key` (`key`),
 		KEY `entry` (`entry`),
 		FOREIGN KEY (`entry`)
 			REFERENCES $table_name (`id`)
