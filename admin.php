@@ -330,19 +330,15 @@ function render_log_row( $entry ) {
 }
 
 /**
- * Capatizle headers accounting for the $deliminators param of ucwords not in some versions of PHP
+ * Format header name for display.
  *
- * @param string $str String we want capitalized with each individual word hyphonated capitalized 
- *
- * @return string Headers properly Capatilzed
+ * @param string $header Header to capitalize.
+ * @return string Formatted header value.
  */
-function capatalize_headers( $str ){
-	$old_arr = explode( '-', $str);
-	$new_arr = array();
-	foreach( $old_arr as $part ){
-		$new_arr[] = ucwords( $part );	
-	}
-	return implode( '-', $new_arr );
+function format_header_name( $header ) {
+	$pieces = explode( '-', $str);
+	$pieces = array_map( 'ucwords', $pieces );
+	return implode( '-', $pieces );
 }
 
 /**
@@ -355,7 +351,7 @@ function capatalize_headers( $str ){
 function render_headers( $headers ) {
 	foreach ( $headers as $key => $value ) {
 		$real_key = str_replace( '_', '-', $key );
-		$real_key = capatalize_headers( $real_key );
+		$real_key = format_header_name( $real_key );
 		printf( "<strong>%s</strong>: %s\n", esc_html( $real_key ), esc_html( implode( ', ', $value ) ) );
 	}
 }
