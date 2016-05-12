@@ -330,6 +330,18 @@ function render_log_row( $entry ) {
 }
 
 /**
+ * Format header name for display.
+ *
+ * @param string $header Header to capitalize.
+ * @return string Formatted header value.
+ */
+function format_header_name( $header ) {
+	$pieces = explode( '-', $str);
+	$pieces = array_map( 'ucwords', $pieces );
+	return implode( '-', $pieces );
+}
+
+/**
  * Render a header map as HTML.
  *
  * Normalizes header name casing (as they're case-insensitive), and escapes.
@@ -339,7 +351,7 @@ function render_log_row( $entry ) {
 function render_headers( $headers ) {
 	foreach ( $headers as $key => $value ) {
 		$real_key = str_replace( '_', '-', $key );
-		$real_key = ucwords( $real_key, ' -' );
+		$real_key = format_header_name( $real_key );
 		printf( "<strong>%s</strong>: %s\n", esc_html( $real_key ), esc_html( implode( ', ', $value ) ) );
 	}
 }
