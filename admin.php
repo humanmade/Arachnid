@@ -14,6 +14,7 @@ function bootstrap() {
 	}
 
 	add_action( 'admin_menu', __NAMESPACE__ . '\\register' );
+	add_filter( 'arachnid.admin.log.request_body', __NAMESPACE__ . '\\prettify_json_request_body' );
 }
 
 function register() {
@@ -360,13 +361,13 @@ function render_request( WP_REST_Request $request ) {
 	static $id = 0;
 	$id++;
 
-	$body = $request->get_body();
-
-	// Pretty-print the JSON if we can.
-	$decoded = json_decode( $body );
-	if ( json_last_error() === JSON_ERROR_NONE && $decoded !== null ) {
-		$body = wp_json_encode( $decoded, JSON_PRETTY_PRINT );
-	}
+	/**
+	 * Filter the request body to be displayed to the user.
+	 *
+	 * @param string $body Request body content.
+	 * @param WP_REST_Request $request Request object.
+	 */
+	$body = apply_filters( 'arachnid.admin.log.request_body', $request->get_body(), $request );
 
 	$headers_id = sprintf( 'arachnid-request-headers-%d', $id );
 	$body_id = sprintf( 'arachnid-request-body-%d', $id );
@@ -386,6 +387,16 @@ function render_request( WP_REST_Request $request ) {
 	<pre id="<?php echo esc_attr( $body_id ) ?>"><?php echo esc_html( $body ) ?></pre>
 
 	<?php
+}
+
+function prettify_json_request_body( $body ) {
+	// Pretty-print the JSON if we can.
+	$decoded = json_decode( $body );
+	if ( json_last_error() === JSON_ERROR_NONE && $decoded !== null ) {
+		$body = wp_json_encode( $decoded, JSON_PRETTY_PRINT );
+	}
+
+	return $body;
 }
 
 function render_response( WP_REST_Response $response ) {
