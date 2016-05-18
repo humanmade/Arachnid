@@ -336,7 +336,7 @@ function render_log_row( $entry ) {
  * @return string Formatted header value.
  */
 function format_header_name( $header ) {
-	$pieces = explode( '-', $str);
+	$pieces = explode( '-', $header );
 	$pieces = array_map( 'ucwords', $pieces );
 	return implode( '-', $pieces );
 }
