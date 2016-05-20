@@ -325,7 +325,7 @@ class Entry {
 					break;
 
 				case 'after':
-					$conditions[] = '`timestamp` < %s';
+					$conditions[] = '`timestamp` > %s';
 					$params[] = date( 'Y-m-d H:i:s', $value );
 					break;
 
