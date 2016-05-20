@@ -126,7 +126,7 @@ function render() {
 		<div class="tablenav bottom">
 			<div class="tablenav-pages">
 				<p><?php echo esc_html( sprintf(
-					_n( '%d item', '%d items', $logs->total ),
+					_n( '%s item', '%s items', $logs->total ),
 					number_format_i18n( $logs->total )
 				)) ?></p>
 			</div>
