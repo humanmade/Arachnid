@@ -57,6 +57,10 @@ function bootstrap() {
 	Admin\bootstrap();
 
 	add_action( 'rest_dispatch_request', __NAMESPACE__ . '\\on_dispatch_request', 10, 4 );
+
+	if ( defined( 'WP_CLI' ) || ! WP_CLI ) {
+		require( 'inc/cli.php' );
+	};
 }
 
 /**
