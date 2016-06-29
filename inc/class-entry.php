@@ -251,6 +251,28 @@ class Entry {
 	}
 
 	/**
+	 * Deletes an entry
+	 *
+	 * @param int $id ID to be deleted
+	 * @return bool|str true if successful, string if there was an error
+	 */
+	public static function delete( $id ) {
+		global $wpdb;
+		
+		$table = $wpdb->delete( static::get_table(), array( 'id' => $id ), '%d' );
+		if ( false === $table ) {
+			return $wpdb->last_error;
+		}
+		$meta = $wpdb->delete( static::get_meta_table(), array( 'key' => $id ), '%d' );
+		if ( false === $meta ) {
+			return $wpdb->last_error;
+		}
+
+		return true;
+
+	}
+
+	/**
 	 * Get entry by ID.
 	 *
 	 * @param int $id Entry ID.
