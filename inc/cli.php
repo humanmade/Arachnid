@@ -52,7 +52,6 @@ class Arachnid_CLI extends WP_CLI_Command {
 
 			// Bump the offset, and go again.
 			WP_CLI::line( sprintf( 'Fetching %d-%d', $current, $current + 9 ) );
-			$query['offset'] = $current;
 			$results = \Arachnid\Entry::query( $query );
 			$entries = $results->items;
 		}
