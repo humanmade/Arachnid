@@ -56,7 +56,10 @@ class Arachnid_CLI extends WP_CLI_Command {
 			$entries = $results->items;
 		}
 
+		WP_CLI::success( sprintf( '%d entries deleted out of %d ', $current, $total ) );
+
 	}
+
 
 
 }
