@@ -110,6 +110,15 @@ class Entry {
 	}
 
 	/**
+	 * Get response status.
+	 *
+	 * @return int
+	 */
+	public function get_response_status() {
+		return $this->response_status;
+	}
+
+	/**
 	 * Get a meta value for the request.
 	 *
 	 * @param string $key Meta key.

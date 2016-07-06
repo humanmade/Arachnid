@@ -227,7 +227,7 @@ function render_log_row( $entry ) {
 	$response = $entry->get_response();
 	$response = is_wp_error( $response ) ? error_to_response( $response ) : rest_ensure_response( $response );
 
-	$status = $response->get_status();
+	$status = $entry->get_response_status();
 	$success = $status >= 200 && $status < 300;
 	switch ( true ) {
 		case $status >= 200 && $status < 300:
