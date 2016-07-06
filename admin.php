@@ -2,6 +2,7 @@
 
 namespace Arachnid\Admin;
 
+use Exception;
 use Arachnid\Entry;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -227,7 +228,7 @@ function render_log_row( $entry ) {
 	$response = $entry->get_response();
 	$response = is_wp_error( $response ) ? error_to_response( $response ) : rest_ensure_response( $response );
 
-	$status = $response->get_status();
+	$status = $entry->get_response_status();
 	$success = $status >= 200 && $status < 300;
 	switch ( true ) {
 		case $status >= 200 && $status < 300:
@@ -420,6 +421,13 @@ function render_response( WP_REST_Response $response ) {
 	<button class="button arachnid-copy" data-clipboard-target="#<?php echo esc_attr( $body_id ) ?>">
 		<i class="dashicons dashicons-clipboard"></i>
 	</button>
-	<pre id="<?php echo esc_attr( $body_id ) ?>"><?php echo esc_html( wp_json_encode( $response->get_data(), JSON_PRETTY_PRINT ) ) ?></pre>
+	<pre id="<?php echo esc_attr( $body_id ) ?>"><?php
+		$data = $response->get_data();
+		if ( $data instanceof Exception ) {
+			var_dump( $data );
+		} else {
+			echo esc_html( wp_json_encode( $response->get_data(), JSON_PRETTY_PRINT ) );
+		}
+		?></pre>
 	<?php
 }

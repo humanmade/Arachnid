@@ -7,6 +7,8 @@
 
 namespace Arachnid;
 
+use Exception;
+
 const VERSION = '0.1';
 
 spl_autoload_register( __NAMESPACE__ . '\\autoload' );
@@ -137,18 +139,30 @@ function on_dispatch_request( $result, $request, $route, $handler ) {
 		return $result;
 	}
 
-	// If we don't have a result, get it now.
-	if ( empty( $result ) ) {
-		$result = call_user_func( $handler['callback'], $request );
-	}
-
 	// We've found a webhook, so log it. THIS IS NOT A DRILL!
 	$data = [
 		'timestamp'       => $GLOBALS['timestart'],
 		'route'           => $route,
 		'request'         => $request,
-		'response'        => $result,
 	];
+
+	// If we don't have a result, get it now.
+	if ( empty( $result ) ) {
+		try {
+			$result = call_user_func( $handler['callback'], $request );
+		} catch ( Exception $e ) {
+			// Log the exception, then move on.
+			$data['response'] = $e;
+			$data['response_status'] = 500;
+			$entry = Entry::create( $data );
+
+			// Re-throw the exception.
+			throw $e;
+		}
+	}
+
+	// Log the resulting data.
+	$data['response'] = $result;
 
 	// Grab the status, depending on what result we have.
 	if ( is_wp_error( $result ) ) {
