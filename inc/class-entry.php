@@ -235,7 +235,11 @@ class Entry {
 				continue;
 			}
 
-			$fields[ $key ] = serialize( $data[ $key ] );
+			if ( is_object( $data[ $key ] ) && $data[ $key ] instanceof Closure ) {
+				$fields[ $key ] = serialize( 'Closure' );
+			} else {
+				$fields[ $key ] = serialize( $data[ $key ] );
+			}
 		}
 
 		if ( isset( $data['response_status'] ) ) {
