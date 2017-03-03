@@ -237,8 +237,10 @@ class Entry {
 				continue;
 			}
 
-			if ( 'request' === $key ) {
-				$request = clone( $data[ $key ] );
+			if ( 'request' !== $key ) {
+				$fields[ $key ] = serialize( $data[ $key ] );
+			} else {
+				$request = clone $data[ $key ];
 				$attributes = $request->get_attributes();
 				if ( is_object( $attributes['callback'] ) && $attributes['callback'] instanceof Closure ) {
 					$r = new ReflectionFunction( $attributes['callback'] );
@@ -251,10 +253,7 @@ class Entry {
 				$request->set_attributes( $attributes );
 
 				$fields[ $key ] = serialize( $request );
-			} else {
-				$fields[ $key ] = serialize( $data[ $key ] );
 			}
-
 		}
 
 		if ( isset( $data['response_status'] ) ) {
