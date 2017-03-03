@@ -235,10 +235,10 @@ class Entry {
 				continue;
 			}
 
-			if ( is_object( $data[ $key ] ) && $data[ $key ] instanceof Closure ) {
-				$fields[ $key ] = serialize( 'Closure' );
-			} else {
+			try {
 				$fields[ $key ] = serialize( $data[ $key ] );
+			} catch ( Exception $e ) {
+				$fields[ $key ] = serialize( array( $e->getCode(), $e->getMessage() ) );
 			}
 		}
 
