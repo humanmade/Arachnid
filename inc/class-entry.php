@@ -3,6 +3,7 @@
 namespace Arachnid;
 
 use WP_Error;
+use Exception;
 
 class Entry {
 	const TABLE_NAME = '%sarachnid_entries';
