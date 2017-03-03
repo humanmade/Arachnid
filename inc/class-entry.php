@@ -3,7 +3,8 @@
 namespace Arachnid;
 
 use WP_Error;
-use Exception;
+use Closure;
+use ReflectionFunction;
 
 class Entry {
 	const TABLE_NAME = '%sarachnid_entries';
@@ -236,11 +237,24 @@ class Entry {
 				continue;
 			}
 
-			try {
+			if ( 'request' === $key ) {
+				$request = clone( $data[ $key ] );
+				$attributes = $request->get_attributes();
+				if ( is_object( $attributes['callback'] ) && $attributes['callback'] instanceof Closure ) {
+					$r = new ReflectionFunction( $attributes['callback'] );
+					$attributes['callback'] = sprintf( 'Closure (%s:%d)', $r->getFileName(), $r->getStartLine() );
+				}
+				if ( is_object( $attributes['permission_callback'] ) && $attributes['permission_callback'] instanceof Closure ) {
+					$r = new ReflectionFunction( $attributes['permission_callback'] );
+					$attributes['permission_callback'] = sprintf( 'Closure (%s:%d)', $r->getFileName(), $r->getStartLine() );
+				}
+				$request->set_attributes( $attributes );
+
+				$fields[ $key ] = serialize( $request );
+			} else {
 				$fields[ $key ] = serialize( $data[ $key ] );
-			} catch ( Exception $e ) {
-				$fields[ $key ] = serialize( array( $e->getCode(), $e->getMessage() ) );
 			}
+
 		}
 
 		if ( isset( $data['response_status'] ) ) {
